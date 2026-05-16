@@ -13,7 +13,8 @@ class SalesAgent:
             print("No uncontacted leads found.")
             return
 
-        print(f"Found {len(leads)} lead(s).")
+        print(f"Found {len(leads)} leads.")
+        print(leads)
 
         for lead in leads:
             lead_id = lead[0]
