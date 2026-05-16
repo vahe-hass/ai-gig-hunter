@@ -1,0 +1,1 @@
+N8N_WEBHOOK = "http://localhost:5678/webhook/send-outreach"
