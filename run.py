@@ -3,4 +3,4 @@ from agents.sales_agent import SalesAgent
 
 if __name__ == "__main__":
     MarketingAgent().run()
-    SalesAgent().run()
+    # SalesAgent().run()

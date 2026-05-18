@@ -1,2 +1,4 @@
 __pycache__/
 leads.db
+joblist.py
+test_scraper.py
