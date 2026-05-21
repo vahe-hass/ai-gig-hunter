@@ -74,6 +74,11 @@ def fetch_remoteok_jobs():
 
         data = response.json()
 
+        print(
+            f"Found {len(data)} "
+            f"potential job links"
+        )
+
         # first item is metadata
         for item in data[1:]:
 

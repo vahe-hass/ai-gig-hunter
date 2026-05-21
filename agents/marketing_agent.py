@@ -4,7 +4,7 @@ from memory.db import save_lead
 
 class MarketingAgent:
 
-    MINIMUM_SCORE = 40
+    MINIMUM_SCORE = 35
 
     def run(self):
 
@@ -32,12 +32,12 @@ class MarketingAgent:
     def score_lead(self, job):
         score = 0
         title = job.get("title", "").lower()
-        description = job.get("description", "").lower()
+        description = (job.get("description") or "").lower()
         text = f"{title} {description}"
 
         # keyword scoring
         if "wordpress" in text:
-            score += 25
+            score += 35
 
         if "website" in text:
             score += 20
@@ -46,6 +46,9 @@ class MarketingAgent:
             score += 20
 
         if "web developer" in text:
+            score += 20
+
+        if "developer" in text:
             score += 20
 
         if "shopify" in text:

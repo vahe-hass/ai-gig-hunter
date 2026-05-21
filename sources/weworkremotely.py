@@ -2,12 +2,32 @@ import requests
 
 from bs4 import BeautifulSoup
 
+KEYWORDS = [
+    "web",
+    "wordpress",
+    "react",
+    "frontend",
+    "backend",
+    "developer",
+    "shopify",
+    "javascript",
+    "php",
+]
+
+def is_relevant_job(text):
+
+    text = text.lower()
+
+    return any(
+        keyword in text
+        for keyword in KEYWORDS
+    )
+
 
 def fetch_weworkremotely_jobs():
 
     url = (
         "https://weworkremotely.com/"
-        "remote-jobs/search?term=developer"
     )
 
     headers = {
@@ -59,7 +79,7 @@ def fetch_weworkremotely_jobs():
 
         seen_urls = set()
 
-        for link in links:
+        for link in links[3:]:
 
             try:
 
@@ -75,12 +95,12 @@ def fetch_weworkremotely_jobs():
 
                 # title
                 title_tag = (
-                    link.select_one("span.title")
+                    link.select_one("div.new-listing__header__title__text")
                 )
 
                 # company
                 company_tag = (
-                    link.select_one("span.company")
+                    link.select_one("p.new-listing__company-name")
                 )
 
                 title = None
@@ -96,13 +116,25 @@ def fetch_weworkremotely_jobs():
                         strip=True
                     )
 
+                searchable_text = (
+                    f"{title}"
+                )
+
+                # filter irrelevant jobs
+                if not is_relevant_job(
+                    searchable_text
+                ):
+                    continue
+
                 if not title:
                     continue
+
 
                 company = (
                     company_tag.get_text(strip=True)
                     if company_tag else None
                 )
+
 
                 job_url = (
                     "https://weworkremotely.com"
@@ -131,7 +163,7 @@ def fetch_weworkremotely_jobs():
 
         print(
             f"WeWorkRemotely: fetched "
-            f"{len(jobs)} jobs"
+            f"{len(jobs)} relevant jobs"
         )
 
         return jobs
