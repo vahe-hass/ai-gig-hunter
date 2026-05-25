@@ -51,18 +51,8 @@ def fetch_weworkremotely_jobs():
             timeout=10
         )
 
-        print(
-            f"WeWorkRemotely status: "
-            f"{response.status_code}"
-        )
-
         if response.status_code != 200:
             return []
-
-        print(
-            f"Response length: "
-            f"{len(response.text)}"
-        )
 
         soup = BeautifulSoup(
             response.text,

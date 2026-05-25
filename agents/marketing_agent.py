@@ -9,17 +9,12 @@ class MarketingAgent:
     def run(self):
 
         jobs = get_jobs()
-        print(f"Found {len(jobs)} job(s)")
 
         for job in jobs:
             score = self.score_lead(job)
             job["score"] = score
             if score >= self.MINIMUM_SCORE:
                 save_lead(job)
-                print(
-                    f"Saved lead: {job.get('title')} "
-                    f"(score: {score})"
-                )
 
             else:
 

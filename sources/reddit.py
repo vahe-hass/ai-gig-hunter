@@ -4,7 +4,9 @@ import requests
 SUBREDDITS = [
     "forhire",
     "freelance_forhire",
-    "webdevjobs"
+    "webdevjobs",
+    "smallbusiness",
+    "startups"
 ]
 
 

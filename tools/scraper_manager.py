@@ -24,6 +24,7 @@ def get_jobs():
 
 
     print(f"Total jobs collected: {len(jobs)}")
+    print("-------------------------------------------------------")
 
     return jobs
 
