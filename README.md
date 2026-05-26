@@ -6,7 +6,7 @@ Built with Python, SQLite, modular scrapers, and n8n automation.
 
 ---
 
-# 🚀 Features
+## 🚀 Features
 
 - Multi-source lead scraping
 - Intelligent lead scoring
@@ -16,11 +16,9 @@ Built with Python, SQLite, modular scrapers, and n8n automation.
 - Duplicate prevention
 - Extensible scraper system
 
----
+## 🧠 Current Agents
 
-# 🧠 Current Agents
-
-## Marketing Agent
+### Marketing Agent
 
 Responsible for:
 - collecting leads from scrapers
@@ -28,36 +26,33 @@ Responsible for:
 - scoring leads
 - saving qualified leads into the database
 
----
 
-## Sales Agent
+### Sales Agent
 
 Responsible for:
 - retrieving uncontacted leads
 - sending outreach via n8n webhook
 - marking leads as contacted
 
----
 
-# 🌐 Current Scrapers
+## 🌐 Current Scrapers
 
-## RemoteOK
+### RemoteOK
 
 Scrapes remote developer jobs from RemoteOK.
 
-## Reddit
+### Reddit
 
 Scrapes hiring-related posts from Reddit.
 
 Supports filtering buyer vs seller posts.
 
-## WeWorkRemotely
+### WeWorkRemotely
 
 Scrapes remote developer opportunities from We Work Remotely.
 
----
 
-# 🏗️ Project Structure
+## 🏗️ Project Structure
 
 ```text
 ai-gig-hunter/
@@ -87,9 +82,8 @@ ai-gig-hunter/
 └── README.md
 ```
 
----
 
-# ⚙️ Tech Stack
+## ⚙️ Tech Stack
 
 - Python 3
 - SQLite
@@ -97,9 +91,8 @@ ai-gig-hunter/
 - BeautifulSoup
 - n8n
 
----
 
-# 📦 Installation
+## 📦 Installation
 
 1. **Clone the repository:**
    ```bash
@@ -112,8 +105,9 @@ ai-gig-hunter/
 3. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
+
 ```
----
+
 
 ### Contributing
 

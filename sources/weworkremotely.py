@@ -136,7 +136,7 @@ def fetch_weworkremotely_jobs():
                     "description": None,
                     "client_name": company,
                     "client_email": None,
-                    "budget": None,
+                    "client_website": None,
                     "url": job_url
                 }
 

@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS leads (
 
     client_email TEXT,
 
-    budget TEXT,
+    client_website TEXT,
 
     url TEXT UNIQUE,
 
@@ -60,7 +60,7 @@ def save_lead(job):
             description,
             client_name,
             client_email,
-            budget,
+            client_website,
             url,
             score
 
@@ -76,7 +76,7 @@ def save_lead(job):
 
             job.get("client_email"),
 
-            job.get("budget"),
+            job.get("client_website"),
 
             job.get("url"),
 

@@ -1,0 +1,237 @@
+import requests
+import time
+import random
+from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+
+
+script_dir = Path(__file__).parent
+env_path = script_dir.parent / '.env'
+
+load_dotenv(dotenv_path=env_path)
+
+GMAP_API_KEY = os.getenv('GMAP_API_KEY')
+
+
+SEARCH_QUERIES = [
+    "restaurants in Yerevan",
+    "dentists in Yerevan",
+    "gyms in Yerevan",
+    "beauty salons in Yerevan",
+    "real estate agencies in Yerevan"
+]
+
+
+
+
+
+TEXT_SEARCH_URL = (
+    "https://maps.googleapis.com/maps/api/place/textsearch/json"
+)
+
+PLACE_DETAILS_URL = (
+    "https://maps.googleapis.com/maps/api/place/details/json"
+)
+
+
+def fetch_place_details(place_id):
+
+
+    try:
+        
+        params = {
+
+            "place_id": place_id,
+
+            "fields": (
+                "name,"
+                "formatted_address,"
+                "website,"
+                "formatted_phone_number,"
+                "url"
+            ),
+
+            "key": GMAP_API_KEY
+        }
+
+        response = requests.get(
+            PLACE_DETAILS_URL,
+            params=params,
+            timeout=10
+        )
+
+        if response.status_code != 200:
+
+            print(
+                f"Place Details bad status: "
+                f"{response.status_code}"
+            )
+
+            return None
+
+        data = response.json()
+
+        result = data.get("result")
+
+        if not result:
+            return None
+
+        return result
+
+    except Exception as e:
+
+        print(
+            "Failed fetching place details"
+        )
+
+        print(str(e))
+
+        return None
+
+
+def fetch_google_maps_leads():
+
+    jobs = []
+
+    seen_place_ids = set()
+
+    try:
+
+        if not os.getenv('GMAP_API_KEY'):
+
+            print("Your Google maps API key is missing")
+
+            return []
+
+        for query in SEARCH_QUERIES:
+
+            print(
+                f"Searching Google Maps: "
+                f"{query}"
+            )
+
+            params = {
+
+                "query": query,
+
+                "key": GMAP_API_KEY
+            }
+
+            response = requests.get(
+                TEXT_SEARCH_URL,
+                params=params,
+                timeout=10
+            )
+
+            if response.status_code != 200:
+
+                print(
+                    f"Google Maps bad status: "
+                    f"{response.status_code}"
+                )
+
+                continue
+
+            data = response.json()
+
+            results = data.get(
+                "results",
+                []
+            )
+
+            print(
+                f"{query}: "
+                f"{len(results)} places found"
+            )
+
+            for place in results:
+
+                try:
+
+                    place_id = place.get(
+                        "place_id"
+                    )
+
+                    if not place_id:
+                        continue
+
+                    if place_id in seen_place_ids:
+                        continue
+
+                    seen_place_ids.add(place_id)
+
+                    # polite delay
+                    time.sleep(
+                        random.uniform(2, 3)
+                    )
+
+                    details = fetch_place_details(
+                        place_id
+                    )
+
+                    if not details:
+                        continue
+
+                    name = details.get("name")
+
+                    address = details.get(
+                        "formatted_address"
+                    )
+
+                    website = details.get(
+                        "website"
+                    )
+
+                    phone = details.get(
+                        "formatted_phone_number"
+                    )
+
+                    maps_url = details.get(
+                        "url"
+                    )
+
+
+                    job = {
+
+                        "title": name,
+
+                        "description": (
+                            f"Address: {address} "
+                            f"Phone: {phone}"
+                        ),
+
+                        "client_name": name,
+                        "client_email": None,
+                        "client_website": website,
+                        "url": maps_url,
+
+                    }
+
+                    jobs.append(job)
+
+                except Exception as inner_error:
+
+                    print(
+                        "Failed parsing place"
+                    )
+
+                    print(str(inner_error))
+
+        print(
+            f"Google Maps: fetched "
+            f"{len(jobs)} leads"
+        )
+
+        return jobs
+
+    except Exception as e:
+
+        print(
+            "Google Maps scraper failed"
+        )
+
+        print(str(e))
+
+        return []

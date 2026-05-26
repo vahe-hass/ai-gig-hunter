@@ -34,6 +34,9 @@ class MarketingAgent:
         if "wordpress" in text:
             score += 35
 
+        if "phone:" in text:
+            score += 35
+
         if "website" in text:
             score += 20
 

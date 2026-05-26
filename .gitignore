@@ -1,4 +1,8 @@
 __pycache__/
-leads.db
+*.db
 joblist.py
 test_scraper.py
+
+# Environment variables
+.env
+.env.*.local

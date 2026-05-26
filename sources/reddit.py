@@ -175,7 +175,7 @@ def fetch_reddit_jobs():
                         "description": description,
                         "client_name": author,
                         "client_email": None,
-                        "budget": None,
+                        "client_website": None,
                         "url": job_url
                     }
 
