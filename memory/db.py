@@ -29,6 +29,10 @@ CREATE TABLE IF NOT EXISTS leads (
 
     contacted INTEGER DEFAULT 0,
 
+    audit_score INTEGER,
+
+    audit_notes TEXT,
+
     created_at TIMESTAMP
     DEFAULT CURRENT_TIMESTAMP,
 
@@ -166,3 +170,116 @@ def update_score(lead_id, score):
         )
 
         print(str(e))
+
+
+def get_unaudited_websites():
+
+    cursor.execute("""
+
+    SELECT *
+
+    FROM leads
+
+    WHERE client_website IS NOT NULL
+
+    AND audit_score IS NULL
+
+    """)
+
+    columns = [
+        column[0]
+        for column in cursor.description
+    ]
+
+    rows = cursor.fetchall()
+
+    return [
+        dict(zip(columns, row))
+        for row in rows
+    ]
+
+
+def update_website_audit(
+
+    lead_id,
+
+    audit_score,
+
+    audit_notes
+
+):
+
+    cursor.execute("""
+
+    UPDATE leads
+
+    SET
+        audit_score = ?,
+        audit_notes = ?,
+        updated_at = CURRENT_TIMESTAMP
+
+    WHERE id = ?
+
+    """, (
+
+        audit_score,
+        audit_notes,
+        lead_id
+
+    ))
+
+    conn.commit()
+
+def get_leads_missing_email():
+
+    cursor.execute("""
+
+    SELECT *
+
+    FROM leads
+
+    WHERE client_website IS NOT NULL
+
+    AND client_email IS NULL
+
+    """)
+
+    columns = [
+        column[0]
+        for column in cursor.description
+    ]
+
+    rows = cursor.fetchall()
+
+    return [
+        dict(zip(columns, row))
+        for row in rows
+    ]
+
+
+def update_lead_email(
+
+    lead_id,
+
+    email
+
+):
+
+    cursor.execute("""
+
+    UPDATE leads
+
+    SET
+        client_email = ?,
+        updated_at = CURRENT_TIMESTAMP
+
+    WHERE id = ?
+
+    """, (
+
+        email,
+        lead_id
+
+    ))
+
+    conn.commit()
