@@ -26,6 +26,18 @@ Responsible for:
 - scoring leads
 - saving qualified leads into the database
 
+### Enrichment Agent
+
+Responsible for:
+- extracting emails
+- enriching lead data
+
+### Audit Agent
+
+Responsible for:
+- website analysis
+- technical scoring
+- generating audit notes
 
 ### Sales Agent
 
@@ -50,6 +62,14 @@ Supports filtering buyer vs seller posts.
 ### WeWorkRemotely
 
 Scrapes remote developer opportunities from We Work Remotely.
+
+### Hackernews
+
+Scrapes remote developer opportunities from ycombinator.com.
+
+### Google Maps
+
+Scrapes google maps places information from provided QUERIES.
 
 
 ## 🏗️ Project Structure
@@ -97,16 +117,18 @@ ai-gig-hunter/
 1. **Clone the repository:**
    ```bash
    git git clone https://github.com/yourusername/ai-gig-hunter.git
+   ```
 
 2. **Navigate to the project directory:**
+
    ```bash
    cd ai-gig-hunter
+   ```
 
 3. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
-
-```
+   ```
 
 
 ### Contributing
