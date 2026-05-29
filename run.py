@@ -34,7 +34,7 @@ def run_enrichment_stage():
 
 def run_audit_stage():
 
-    logger.info("\n==============================")
+    logger.info("==============================")
     logger.info("STAGE 3: AUDIT AGENT")
     logger.info("==============================")
 
@@ -47,7 +47,7 @@ def run_audit_stage():
 
 def run_sales_stage():
 
-    logger.info("\n==============================")
+    logger.info("==============================")
     logger.info("STAGE 4: SALES AGENT")
     logger.info("==============================")
 
@@ -60,7 +60,7 @@ def run_sales_stage():
 
 def main():
 
-    logger.info("\n======================================")
+    logger.info("======================================")
     logger.info("STARTING AI GIG HUNTER PIPELINE")
     logger.info("======================================")
 
@@ -100,12 +100,15 @@ def main():
 
     except Exception as e:
 
-        logger.warning("\nSales stage failed")
+        logger.warning("Sales stage failed")
         logger.exception(e)
 
-    logger.info("======================================")
+    logger.info("===========================================================")
     logger.info("PIPELINE FINISHED")
-    logger.info("======================================")
+    logger.info("===========================================================")
+    logger.info("")
+    logger.info("")
+
 
 
 if __name__ == "__main__":
