@@ -4,7 +4,7 @@ import random
 from pathlib import Path
 from dotenv import load_dotenv
 import os
-
+from config.logger import logger
 
 
 script_dir = Path(__file__).parent
@@ -64,10 +64,7 @@ def fetch_place_details(place_id):
 
         if response.status_code != 200:
 
-            print(
-                f"Place Details bad status: "
-                f"{response.status_code}"
-            )
+            logger.info(f"Place Details bad status: {response.status_code}")
 
             return None
 
@@ -82,11 +79,9 @@ def fetch_place_details(place_id):
 
     except Exception as e:
 
-        print(
-            "Failed fetching place details"
-        )
+        logger.warning("Failed fetching place details")
+        logger.exception(e)
 
-        print(str(e))
 
         return None
 
@@ -101,16 +96,13 @@ def fetch_google_maps_leads():
 
         if not os.getenv('GMAP_API_KEY'):
 
-            print("Your Google maps API key is missing")
+            logger.info("Your Google maps API key is missing")
 
             return []
 
         for query in SEARCH_QUERIES:
 
-            print(
-                f"Searching Google Maps: "
-                f"{query}"
-            )
+            logger.info(f"Searching Google Maps: {query}")
 
             params = {
 
@@ -127,10 +119,7 @@ def fetch_google_maps_leads():
 
             if response.status_code != 200:
 
-                print(
-                    f"Google Maps bad status: "
-                    f"{response.status_code}"
-                )
+                logger.info(f"Google Maps bad status: {response.status_code}")
 
                 continue
 
@@ -141,10 +130,7 @@ def fetch_google_maps_leads():
                 []
             )
 
-            print(
-                f"{query}: "
-                f"{len(results)} places found"
-            )
+            logger.info(f"{query}: {len(results)} places found")
 
             for place in results:
 
@@ -213,25 +199,19 @@ def fetch_google_maps_leads():
 
                 except Exception as inner_error:
 
-                    print(
-                        "Failed parsing place"
-                    )
+ 
+                    logger.warning("Failed parsing place")
+                    logger.exception(inner_error)
 
-                    print(str(inner_error))
 
-        print(
-            f"Google Maps: fetched "
-            f"{len(jobs)} leads"
-        )
+
+        logger.info(f"Google Maps: fetched {len(jobs)} leads")
 
         return jobs
 
     except Exception as e:
 
-        print(
-            "Google Maps scraper failed"
-        )
-
-        print(str(e))
+        logger.warning("Google Maps scraper failed")
+        logger.exception(e)
 
         return []

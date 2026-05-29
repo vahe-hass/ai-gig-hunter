@@ -1,6 +1,8 @@
 import requests
-
 from bs4 import BeautifulSoup
+from config.logger import logger
+
+
 
 KEYWORDS = [
     "web",
@@ -62,10 +64,8 @@ def fetch_weworkremotely_jobs():
         # all job links
         links = soup.select('a[href*="/remote-jobs/"]')
 
-        print(
-            f"Found {len(links)} "
-            f"potential job links"
-        )
+
+        logger.info(f"Found {len(links)} potential job links")
 
         seen_urls = set()
 
@@ -144,26 +144,17 @@ def fetch_weworkremotely_jobs():
 
             except Exception as inner_error:
 
-                print(
-                    "Failed parsing one "
-                    "WeWorkRemotely job"
-                )
+                logger.warning("Failed parsing one WeWorkRemotely job")
+                logger.exception(inner_error)
 
-                print(str(inner_error))
 
-        print(
-            f"WeWorkRemotely: fetched "
-            f"{len(jobs)} relevant jobs"
-        )
+        logger.info(f"WeWorkRemotely: fetched {len(jobs)} relevant jobs")
 
         return jobs
 
     except Exception as e:
 
-        print(
-            "WeWorkRemotely scraper failed"
-        )
-
-        print(str(e))
+        logger.warning("WeWorkRemotely scraper failed")
+        logger.exception(e)
 
         return []

@@ -13,6 +13,7 @@ from sources.hackernews import (
 from sources.google_maps import (
     fetch_google_maps_leads
 )
+from config.logger import logger
 
 def get_jobs():
 
@@ -39,10 +40,8 @@ def get_jobs():
     )
 
     
-
-
-    print(f"Total jobs collected: {len(jobs)}")
-    print("-------------------------------------------------------")
+    logger.info(f"Total jobs collected: {len(jobs)}")
+    logger.info("---------------------------------------------------------")
 
     return jobs
 

@@ -1,5 +1,6 @@
 from tools.scraper_manager import get_jobs
 from memory.db import save_lead
+from config.logger import logger
 
 
 class MarketingAgent:
@@ -18,11 +19,7 @@ class MarketingAgent:
 
             else:
 
-                print(
-                    f"Skipped low-score lead: "
-                    f"{job.get('title')} "
-                    f"(score: {score})"
-                )
+                logger.info(f"Skipped low-score lead: {job.get('title')} (score: {score})")
 
     def score_lead(self, job):
         score = 0

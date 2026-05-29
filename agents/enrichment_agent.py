@@ -7,6 +7,8 @@ from memory.db import (
     update_lead_email
 )
 
+from config.logger import logger
+
 
 class EnrichmentAgent:
 
@@ -14,10 +16,8 @@ class EnrichmentAgent:
 
         leads = get_leads_missing_email()
 
-        print(
-            f"Found {len(leads)} "
-            f"leads missing emails"
-        )
+
+        logger.info(f"Found {len(leads)} leads missing emails")
 
         for lead in leads:
 
@@ -30,10 +30,7 @@ class EnrichmentAgent:
                 if not website:
                     continue
 
-                print(
-                    f"Extracting emails from "
-                    f"{website}"
-                )
+                logger.info(f"Extracting emails from {website}")
 
                 emails = extract_emails_from_url(
                     website
@@ -41,9 +38,7 @@ class EnrichmentAgent:
 
                 if not emails:
 
-                    print(
-                        "No emails found"
-                    )
+                    logger.info("No emails found")
 
                     continue
 
@@ -57,18 +52,12 @@ class EnrichmentAgent:
 
                 )
 
-                print(
-                    f"Email saved: "
-                    f"{primary_email}"
-                )
+                logger.info(f"Email saved: {primary_email}")
 
             except Exception as e:
 
-                print(
-                    "EnrichmentAgent failed"
-                )
-
-                print(str(e))
+                logger.warning("EnrichmentAgent failed")
+                logger.exception(e)
 
 
 if __name__ == "__main__":

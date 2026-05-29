@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from config.logger import logger
 
 
 KEYWORDS = [
@@ -64,19 +65,14 @@ def fetch_remoteok_jobs():
 
         if response.status_code != 200:
 
-            print(
-                f"RemoteOK bad status: "
-                f"{response.status_code}"
-            )
+
+            logger.info(f"RemoteOK bad status: {response.status_code}")
 
             return []
 
         data = response.json()
 
-        print(
-            f"Found {len(data)} "
-            f"potential job links"
-        )
+        logger.info(f"Found {len(data)} potential job links")
 
         # first item is metadata
         for item in data[1:]:
@@ -125,24 +121,18 @@ def fetch_remoteok_jobs():
 
             except Exception as inner_error:
 
-                print(
-                    "Failed parsing one "
-                    "RemoteOK job"
-                )
+                logger.warning("Failed parsing one RemoteOK job")
+                logger.exception(inner_error)
 
-                print(str(inner_error))
 
-        print(
-            f"RemoteOK: fetched "
-            f"{len(jobs)} relevant jobs"
-        )
+        logger.info(f"RemoteOK: fetched {len(jobs)} relevant jobs")
 
         return jobs
 
     except Exception as e:
 
-        print("RemoteOK scraper failed")
+        logger.warning("RemoteOK scraper failed")
+        logger.exception(e)
 
-        print(str(e))
 
         return []

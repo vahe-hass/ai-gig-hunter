@@ -1,4 +1,5 @@
 import requests
+from config.logger import logger
 
 
 SUBREDDITS = [
@@ -104,11 +105,9 @@ def fetch_reddit_jobs():
 
             if response.status_code != 200:
 
-                print(
-                    f"Reddit bad status "
-                    f"for r/{subreddit}: "
-                    f"{response.status_code}"
-                )
+
+                logger.info(f"Reddit bad status for r/{subreddit}: {response.status_code}")
+
 
                 continue
 
@@ -119,10 +118,7 @@ def fetch_reddit_jobs():
                 .get("children", [])
             )
 
-            print(
-                f"r/{subreddit}: "
-                f"{len(posts)} posts fetched"
-            )
+            logger.info(f"r/{subreddit}: {len(posts)} posts fetched")
 
             for post in posts:
 
@@ -183,24 +179,19 @@ def fetch_reddit_jobs():
 
                 except Exception as inner_error:
 
-                    print(
-                        "Failed parsing "
-                        "Reddit post"
-                    )
 
-                    print(str(inner_error))
+                    logger.warning("Failed parsing Reddit post")
+                    logger.exception(inner_error)
 
-        print(
-            f"Reddit: fetched "
-            f"{len(jobs)} relevant posts"
-        )
+
+        logger.info(f"Reddit: fetched {len(jobs)} relevant posts"
+)
 
         return jobs
 
     except Exception as e:
 
-        print("Reddit scraper failed")
-
-        print(str(e))
+        logger.warning("Reddit scraper failed")
+        logger.exception(e)
 
         return []

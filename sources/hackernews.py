@@ -1,8 +1,8 @@
 import requests
 import time
 import random
-
 from bs4 import BeautifulSoup
+from config.logger import logger
 
 
 KEYWORDS = [
@@ -66,17 +66,10 @@ def fetch_hackernews_jobs():
 
             sleep_time = random.uniform(5, 6)
 
-            print(
-                f"Sleeping for "
-                f"{sleep_time:.2f} seconds"
-            )
-
             time.sleep(sleep_time)
 
-            print(
-                f"Scraping HackerNews: "
-                f"{current_url}"
-            )
+
+            logger.info(f"Scraping HackerNews: {current_url}")
 
             response = session.get(
                 current_url,
@@ -85,19 +78,14 @@ def fetch_hackernews_jobs():
 
             if response.status_code == 429:
 
-                print(
-                    "HackerNews rate limited "
-                    "(429). Stopping scraper."
-                )
+
+                logger.warning("HackerNews rate limited (429) Stopping scraper.")
 
                 break
 
             if response.status_code != 200:
 
-                print(
-                    f"HackerNews bad status: "
-                    f"{response.status_code}"
-                )
+                logger.warning(f"HackerNews bad status: {response.status_code}")
 
                 break
 
@@ -108,9 +96,8 @@ def fetch_hackernews_jobs():
 
             rows = soup.select("tr.athing")
 
-            print(
-                f"Found {len(rows)} posts"
-            )
+
+            logger.info(f"Found {len(rows)} posts")
 
             for row in rows:
 
@@ -162,12 +149,10 @@ def fetch_hackernews_jobs():
 
                 except Exception as inner_error:
 
-                    print(
-                        "Failed parsing "
-                        "HackerNews post"
-                    )
 
-                    print(str(inner_error))
+                    logger.warning("Failed parsing HackerNews post")
+                    logger.exception(inner_error)
+
 
             # find next page link
             more_link = soup.select_one(
@@ -176,9 +161,7 @@ def fetch_hackernews_jobs():
 
             if not more_link:
 
-                print(
-                    "No more pages found"
-                )
+                logger.info("No more pages found")
 
                 break
 
@@ -193,19 +176,15 @@ def fetch_hackernews_jobs():
                 + next_href
             )
 
-        print(
-            f"HackerNews: fetched "
-            f"{len(jobs)} relevant jobs"
-        )
+        logger.info(f"HackerNews: fetched {len(jobs)} relevant jobs")
 
         return jobs
 
     except Exception as e:
 
-        print(
-            "HackerNews scraper failed"
-        )
 
-        print(str(e))
+        logger.warning("HackerNews scraper failed")
+        logger.exception(e)
+
 
         return []

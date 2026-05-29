@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 from memory.db import get_unaudited_websites, update_website_audit
+from config.logger import logger
+
 
 
 HEADERS = {
@@ -188,10 +190,7 @@ class AuditAgent:
 
         leads = get_unaudited_websites()
 
-        print(
-            f"Found {len(leads)} "
-            f"websites to audit"
-        )
+        logger.info(f"Found {len(leads)} websites to audit")
 
         for lead in leads:
 
@@ -205,9 +204,7 @@ class AuditAgent:
 
                     continue
 
-                print(
-                    f"Auditing: {website}"
-                )
+                logger.info(f"Auditing: {website}")
 
                 audit = analyze_website(
                     website
@@ -223,18 +220,12 @@ class AuditAgent:
 
                 )
 
-                print(
-                    f"Audit complete: "
-                    f"{audit['score']}"
-                )
+                logger.info(f"Audit complete: {audit['score']}")
 
             except Exception as e:
 
-                print(
-                    "AuditAgent failed"
-                )
-
-                print(str(e))
+                logger.warning("AuditAgent failed")
+                logger.exception(e)
 
 
 if __name__ == "__main__":

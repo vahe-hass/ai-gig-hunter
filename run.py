@@ -2,69 +2,68 @@ from agents.marketing_agent import MarketingAgent
 from agents.enrichment_agent import EnrichmentAgent
 from agents.audit_agent import AuditAgent
 from agents.sales_agent import SalesAgent
+from config.logger import logger
 
 
 def run_marketing_stage():
 
-    print("\n==============================")
-    print("STAGE 1: MARKETING AGENT")
-    print("==============================")
+
+    logger.info("==============================")
+    logger.info("STAGE 1: MARKETING AGENT")
+    logger.info("==============================")
 
     agent = MarketingAgent()
 
     agent.run()
 
-    print("\nMarketing stage completed")
+    logger.info("Marketing stage completed")
 
 
 def run_enrichment_stage():
 
-    print("\n==============================")
-    print("STAGE 2: ENRICHMENT AGENT")
-    print("==============================")
+    logger.info("==============================")
+    logger.info("STAGE 2: ENRICHMENT AGENT")
+    logger.info("==============================")
 
     agent = EnrichmentAgent()
 
     agent.run()
 
-    print("\nEnrichment stage completed")
+    logger.info("Enrichment stage completed")
 
 
 def run_audit_stage():
 
-    print("\n==============================")
-    print("STAGE 3: AUDIT AGENT")
-    print("==============================")
+    logger.info("\n==============================")
+    logger.info("STAGE 3: AUDIT AGENT")
+    logger.info("==============================")
 
     agent = AuditAgent()
 
     agent.run()
 
-    print("\nAudit stage completed")
+    logger.info("Audit stage completed")
 
 
 def run_sales_stage():
 
-    print("\n==============================")
-    print("STAGE 4: SALES AGENT")
-    print("==============================")
+    logger.info("\n==============================")
+    logger.info("STAGE 4: SALES AGENT")
+    logger.info("==============================")
 
     agent = SalesAgent()
 
     agent.run()
 
-    print("\nSales stage completed")
+    logger.info("Sales stage completed")
 
 
 def main():
 
-    print("\n======================================")
-    print("STARTING AI GIG HUNTER PIPELINE")
-    print("======================================")
+    logger.info("\n======================================")
+    logger.info("STARTING AI GIG HUNTER PIPELINE")
+    logger.info("======================================")
 
-    # ==================================
-    # STAGE 1 — SCRAPE LEADS
-    # ==================================
 
     try:
 
@@ -72,12 +71,9 @@ def main():
 
     except Exception as e:
 
-        print("\nMarketing stage failed")
-        print(str(e))
+        logger.warning("Marketing stage failed")
+        logger.exception(e)
 
-    # ==================================
-    # STAGE 2 — ENRICH LEADS
-    # ==================================
 
     try:
 
@@ -85,12 +81,8 @@ def main():
 
     except Exception as e:
 
-        print("\nEnrichment stage failed")
-        print(str(e))
-
-    # ==================================
-    # STAGE 3 — AUDIT WEBSITES
-    # ==================================
+        logger.warning("Enrichment stage failed")
+        logger.exception(e)
 
     try:
 
@@ -98,12 +90,9 @@ def main():
 
     except Exception as e:
 
-        print("\nAudit stage failed")
-        print(str(e))
+        logger.warning("Audit stage failed")
+        logger.exception(e)
 
-    # ==================================
-    # STAGE 4 — SEND OUTREACH
-    # ==================================
 
     try:
 
@@ -111,12 +100,12 @@ def main():
 
     except Exception as e:
 
-        print("\nSales stage failed")
-        print(str(e))
+        logger.warning("\nSales stage failed")
+        logger.exception(e)
 
-    print("\n======================================")
-    print("PIPELINE FINISHED")
-    print("======================================")
+    logger.info("======================================")
+    logger.info("PIPELINE FINISHED")
+    logger.info("======================================")
 
 
 if __name__ == "__main__":

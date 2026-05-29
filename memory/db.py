@@ -1,4 +1,5 @@
 import sqlite3
+from config.logger import logger
 
 conn = sqlite3.connect(
     "leads.db",
@@ -49,9 +50,7 @@ def save_lead(job):
 
     if not job.get("title"):
 
-        print(
-            "Skipping lead with missing title"
-        )
+        logger.info("Skipping lead with missing title")
 
         return
 
@@ -92,28 +91,18 @@ def save_lead(job):
 
         if cursor.rowcount == 0:
 
-            print(
-                f"Duplicate skipped: "
-                f"{job.get('title')}"
-            )
+            logger.info(f"Duplicate skipped: {job.get('title')}")
 
         else:
 
-            print(
-                f"Lead saved: "
-                f"{job.get('title')}"
-            )
+            logger.info(f"Lead saved: {job.get('title')}")
 
     except Exception as e:
 
         conn.rollback()
 
-        print(
-            f"Failed to save lead: "
-            f"{job.get('title')}"
-        )
-
-        print(str(e))
+        logger.warning(f"Failed to save lead: {job.get('title')}")
+        logger.exception(e)
 
 
 def get_uncontacted():
@@ -155,21 +144,14 @@ def update_score(lead_id, score):
 
         conn.commit()
 
-        print(
-            f"Updated lead #{lead_id} "
-            f"score to {score}"
-        )
+        logger.info(f"Updated lead #{lead_id} score to {score}")
 
     except Exception as e:
 
         conn.rollback()
 
-        print(
-            f"Failed to update score "
-            f"for lead #{lead_id}"
-        )
-
-        print(str(e))
+        logger.warning(f"Failed to update score for lead #{lead_id}")
+        logger.exception(e)
 
 
 def get_unaudited_websites():
@@ -230,6 +212,7 @@ def update_website_audit(
 
     conn.commit()
 
+
 def get_leads_missing_email():
 
     cursor.execute("""
@@ -283,3 +266,37 @@ def update_lead_email(
     ))
 
     conn.commit()
+
+
+def get_sales_ready_leads():
+
+    cursor.execute("""
+
+    SELECT *
+
+    FROM leads
+
+    WHERE contacted = 0
+
+    AND client_email IS NOT NULL
+
+    AND (
+        score >= 60
+        OR audit_score <= 70
+    )
+
+    ORDER BY created_at DESC
+
+    """)
+
+    columns = [
+        column[0]
+        for column in cursor.description
+    ]
+
+    rows = cursor.fetchall()
+
+    return [
+        dict(zip(columns, row))
+        for row in rows
+    ]

@@ -1,89 +1,216 @@
+import time
+import random
 import requests
 
-from memory.db import get_uncontacted, mark_contacted
-from config.settings import N8N_WEBHOOK
+from memory.db import (
+    get_sales_ready_leads,
+    mark_contacted
+)
+
+from config.settings import (
+    N8N_WEBHOOK
+)
 
 
 class SalesAgent:
 
     def run(self):
-        leads = get_uncontacted()
+
+        leads = get_sales_ready_leads()
 
         if not leads:
-            print("No uncontacted leads found.")
+
+            print(
+                "No sales-ready leads found."
+            )
+
             return
 
-        print(f"Found {len(leads)} leads.")
-        print(leads)
+        print(
+            f"Found {len(leads)} "
+            f"sales-ready leads."
+        )
 
         for lead in leads:
-            lead_id = lead[0]
-            title = lead[1]
-            description = lead[2]
-
-            message = self.generate_message(title, description)
-
-            payload = {
-                "lead_id": lead_id,
-                "title": title,
-                "description": description,
-                "message": message
-            }
 
             try:
+
+                lead_id = lead["id"]
+
+                print(
+                    f"\nProcessing lead "
+                    f"#{lead_id}"
+                )
+
+                message = self.generate_message(
+                    lead
+                )
+
+                payload = {
+
+                    "lead_id":
+                        lead["id"],
+
+                    "client_name":
+                        lead["client_name"],
+
+                    "client_email":
+                        lead["client_email"],
+
+                    "title":
+                        lead["title"],
+
+                    "message":
+                        message,
+
+                    "website":
+                        lead.get(
+                            "client_website"
+                        ),
+
+                    "audit_score":
+                        lead.get(
+                            "audit_score"
+                        ),
+
+                    "audit_notes":
+                        lead.get(
+                            "audit_notes"
+                        )
+                }
+
                 response = requests.post(
+
                     N8N_WEBHOOK,
+
                     json=payload,
-                    timeout=10
+
+                    timeout=15
                 )
 
                 if response.status_code == 200:
-                    print(f"Successfully sent lead #{lead_id} to n8n.")
 
-                    mark_contacted(lead_id)
-
-                else:
                     print(
-                        f"Failed to send lead #{lead_id}. "
-                        f"Status code: {response.status_code}"
+                        f"Successfully sent "
+                        f"lead #{lead_id}"
                     )
 
-                    print("Response:")
-                    print(response.text)
+                    mark_contacted(
+                        lead_id
+                    )
 
-            except requests.exceptions.ConnectionError:
-                print(
-                    "Connection error: Could not connect to n8n.\n"
-                    "Make sure n8n is running and workflow is active."
+                else:
+
+                    print(
+                        f"Failed sending "
+                        f"lead #{lead_id}"
+                    )
+
+                    print(
+                        response.text
+                    )
+
+                # anti-spam delay
+                sleep_time = random.uniform(
+                    3,
+                    8
                 )
 
-            except requests.exceptions.Timeout:
                 print(
-                    f"Timeout error while sending lead #{lead_id}."
+                    f"Sleeping "
+                    f"{sleep_time:.2f}s"
+                )
+
+                time.sleep(
+                    sleep_time
                 )
 
             except Exception as e:
+
                 print(
-                    f"Unexpected error while sending lead #{lead_id}:"
+                    f"SalesAgent failed "
+                    f"for lead #{lead_id}"
                 )
 
                 print(str(e))
 
-    def generate_message(self, title, description):
+    def generate_message(
+
+        self,
+
+        lead
+
+    ):
+
+        client_name = (
+            lead.get(
+                "client_name"
+            )
+            or "there"
+        )
+
+        title = (
+            lead.get(
+                "title"
+            )
+            or ""
+        )
+
+        audit_notes = (
+            lead.get(
+                "audit_notes"
+            )
+            or ""
+        )
+
+        website = (
+            lead.get(
+                "client_website"
+            )
+            or ""
+        )
+
+        # ========================
+        # WEBSITE AUDIT OUTREACH
+        # ========================
+
+        if audit_notes:
+
+            return f"""
+Hi {client_name},
+
+I was checking your website:
+
+{website}
+
+and noticed a few areas that could be improved:
+
+{audit_notes}
+
+I specialize in modern web development and website optimization, and I believe I could help improve the user experience and overall performance of the site.
+
+Would you be open to a quick conversation this week?
+
+Best regards,
+Vahe
+"""
+
+        # ========================
+        # PROJECT OUTREACH
+        # ========================
 
         return f"""
-Hi,
+Hi {client_name},
 
-I saw your project:
+I came across your project:
 
 {title}
 
-It looks like something I can help with.
+and it looks like something I can help with.
 
-I specialize in modern web development and can build
-clean, responsive, and fast websites professionally.
+I specialize in fast, modern, responsive web development and have experience building professional websites and web applications.
 
-Let me know if you'd like to discuss the project further.
+I'd be happy to discuss the project further if you're interested.
 
 Best regards,
 Vahe

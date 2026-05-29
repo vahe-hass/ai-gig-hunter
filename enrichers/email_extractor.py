@@ -1,7 +1,7 @@
 import re
 import requests
-
 from bs4 import BeautifulSoup
+from config.logger import logger
 
 
 EMAIL_REGEX = (
@@ -62,9 +62,7 @@ def extract_emails_from_url(url):
                     + path
                 )
 
-                print(
-                    f"Scanning: {full_url}"
-                )
+                logger.info(f"Scanning: {full_url}")
 
                 response = requests.get(
                     full_url,
@@ -99,20 +97,16 @@ def extract_emails_from_url(url):
 
             except Exception as inner_error:
 
-                print(
-                    "Path scan failed"
-                )
+                logger.warning("Path scan failed")
+                logger.exception(inner_error)
 
-                print(str(inner_error))
 
         return list(found_emails)
 
     except Exception as e:
 
-        print(
-            "Email extraction failed"
-        )
+        logger.warning("Email extraction failed")
+        logger.exception(e)
 
-        print(str(e))
 
         return []
