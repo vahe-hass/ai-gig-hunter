@@ -116,7 +116,7 @@ ai-gig-hunter/
 
 1. **Clone the repository:**
    ```bash
-   git git clone https://github.com/yourusername/ai-gig-hunter.git
+   git clone https://github.com/yourusername/ai-gig-hunter.git
    ```
 
 2. **Navigate to the project directory:**

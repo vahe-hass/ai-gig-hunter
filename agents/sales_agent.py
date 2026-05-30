@@ -11,6 +11,8 @@ from config.settings import (
     N8N_WEBHOOK
 )
 
+from config.logger import logger
+
 
 class SalesAgent:
 
@@ -20,16 +22,11 @@ class SalesAgent:
 
         if not leads:
 
-            print(
-                "No sales-ready leads found."
-            )
+            logger.info("No sales-ready leads found.")
 
             return
 
-        print(
-            f"Found {len(leads)} "
-            f"sales-ready leads."
-        )
+        logger.info(f"Found {len(leads)} sales-ready leads.")
 
         for lead in leads:
 
@@ -37,10 +34,7 @@ class SalesAgent:
 
                 lead_id = lead["id"]
 
-                print(
-                    f"\nProcessing lead "
-                    f"#{lead_id}"
-                )
+                logger.info(f"Processing lead #{lead_id}")
 
                 message = self.generate_message(
                     lead
@@ -90,10 +84,7 @@ class SalesAgent:
 
                 if response.status_code == 200:
 
-                    print(
-                        f"Successfully sent "
-                        f"lead #{lead_id}"
-                    )
+                    logger.info(f"Successfully sent lead #{lead_id}")
 
                     mark_contacted(
                         lead_id
@@ -101,24 +92,13 @@ class SalesAgent:
 
                 else:
 
-                    print(
-                        f"Failed sending "
-                        f"lead #{lead_id}"
-                    )
-
-                    print(
-                        response.text
-                    )
+                    logger.warning(f"Failed sending lead #{lead_id}")
+                    logger.exception(response.text)
 
                 # anti-spam delay
                 sleep_time = random.uniform(
                     3,
                     8
-                )
-
-                print(
-                    f"Sleeping "
-                    f"{sleep_time:.2f}s"
                 )
 
                 time.sleep(
@@ -127,12 +107,8 @@ class SalesAgent:
 
             except Exception as e:
 
-                print(
-                    f"SalesAgent failed "
-                    f"for lead #{lead_id}"
-                )
-
-                print(str(e))
+                logger.warning(f"SalesAgent failed for lead #{lead_id}")
+                logger.exception(e)
 
     def generate_message(
 
@@ -202,15 +178,13 @@ Vahe
         return f"""
 Hi {client_name},
 
-I came across your project:
+I came across your Google search results and wanted to reach out.
 
-{title}
+I specialize in fast, modern, responsive web development and help businesses improve their websites and online presence.
 
-and it looks like something I can help with.
+I'd be happy to discuss how I could help your business attract more customers and provide a better experience for visitors.
 
-I specialize in fast, modern, responsive web development and have experience building professional websites and web applications.
-
-I'd be happy to discuss the project further if you're interested.
+Would you be open to a quick conversation?
 
 Best regards,
 Vahe
