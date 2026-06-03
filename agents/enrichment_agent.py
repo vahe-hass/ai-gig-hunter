@@ -38,6 +38,7 @@ class EnrichmentAgent:
 
                 if not emails:
 
+                    update_lead_email(lead_id,'No email')
                     logger.info("No emails found")
 
                     continue

@@ -4,9 +4,7 @@ from sources.remoteok import (
 from sources.weworkremotely import (
     fetch_weworkremotely_jobs
 )
-from sources.reddit import (
-    fetch_reddit_jobs
-)
+
 from sources.hackernews import (
     fetch_hackernews_jobs
 )
@@ -25,10 +23,6 @@ def get_jobs():
 
     jobs.extend(
         fetch_weworkremotely_jobs() or []
-    )
-
-    jobs.extend(
-        fetch_reddit_jobs() or []
     )
 
     jobs.extend(

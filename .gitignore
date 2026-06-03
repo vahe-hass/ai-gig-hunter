@@ -3,6 +3,7 @@ __pycache__/
 *.log
 joblist.py
 test_scraper.py
+reddit.py
 
 # Environment variables
 .env

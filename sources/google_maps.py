@@ -16,11 +16,11 @@ GMAP_API_KEY = os.getenv('GMAP_API_KEY')
 
 
 SEARCH_QUERIES = [
-    "restaurants in Yerevan",
-    "dentists in Yerevan",
-    "gyms in Yerevan",
-    "beauty salons in Yerevan",
-    "real estate agencies in Yerevan"
+    "restaurants in Lyon",
+    "dentists in Lyon",
+    "gyms in Lyon",
+    "beauty salons in Lyon",
+    "real estate agencies in Lyon"
 ]
 
 

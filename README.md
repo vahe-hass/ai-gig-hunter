@@ -53,11 +53,6 @@ Responsible for:
 
 Scrapes remote developer jobs from RemoteOK.
 
-### Reddit
-
-Scrapes hiring-related posts from Reddit.
-
-Supports filtering buyer vs seller posts.
 
 ### WeWorkRemotely
 
